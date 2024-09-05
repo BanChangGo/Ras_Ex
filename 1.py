@@ -1,32 +1,27 @@
-import gpiod
-import time
+from gpiozero import OutputDevice
+from time import sleep
+
+RELAY_PIN = 17  
+SOLENOID_PIN = 18  
 
 
-chip = gpiod.Chip('gpiochip0')  
-line = chip.get_line(17)  
-
-
-config = gpiod.LineRequest()
-config.consumer = 'button-monitor'  
-config.request_type = gpiod.LineRequest.DIRECTION_INPUT  
-config.flags = gpiod.LineRequest.FLAG_BIAS_PULL_UP 
-
-line.request(config)  
+relay = OutputDevice(RELAY_PIN)
+solenoid = OutputDevice(SOLENOID_PIN)
 
 try:
     while True:
-        
-        button_state = line.get_value()
-        
-        if button_state == 0:
-            print("Button Pressed!")
-        else:
-            print("Button Released!")
-        
-        time.sleep(0.1)  
-except KeyboardInterrupt:
-    
-    print("Exiting...")
+        relay.on()
+        sleep(2)  
 
-finally:
-    line.release() 
+        solenoid.on()
+        sleep(2)  
+
+        solenoid.off()
+        sleep(2)  
+
+        relay.off()
+        sleep(2) 
+
+except KeyboardInterrupt:
+    relay.off()
+    solenoid.off()
