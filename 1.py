@@ -1,8 +1,4 @@
-from picamera import PiCamera
-from time import sleep
+import os
 
-camera = PiCamera()
-
-camera.start_preview()
-sleep(10)
-camera.stop_preview()
+# 10초 동안 미리보기 표시
+os.system("libcamera-still -t 10000")
